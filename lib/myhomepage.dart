@@ -10,12 +10,23 @@ class _MyHomePageState extends State<MyHomePage> {
   List<int> data = [];
   int currentLength = 0;
 
-  final int increment = 1000;
+  final int increment = 10000;
   bool isLoading = false;
+  final _scrollController = ScrollController();
+  bool isClosed = false;
 
   @override
   void initState() {
     _loadMore();
+    _scrollController.addListener(() {
+      if (_scrollController.offset >= 5 && _scrollController.offset <= 200) {
+        if (isClosed) {
+          _scrollController.jumpTo(0);
+        } else {
+          _scrollController.jumpTo(202);
+        }
+      }
+    });
     super.initState();
   }
 
@@ -43,7 +54,7 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Colors.green,
       ),
       body: CustomScrollView(
-        reverse: true,
+        controller: _scrollController,
         slivers: [
           SliverList(
             delegate: SliverChildBuilderDelegate((context, index) {
